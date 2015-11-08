@@ -1,14 +1,14 @@
 package assignment_final;
 import java.io.*;
 import java.util.*;
-public class pricetype implements Serializable {
+public class Pricetype implements Serializable {
 	private double SeniorPrice;
 	private double StudentPrice;
 	private double ChildrenPrice;
 	private double AdultPrice;
 	private double PHPrice;
 	
-	pricetype(){	
+	Pricetype(){	
 	}
 	
 	public void setSeniorPrice(double a){

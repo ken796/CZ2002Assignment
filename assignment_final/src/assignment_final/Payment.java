@@ -2,9 +2,9 @@ package assignment_final;
 import java.util.*;
 import java.io.*;
 public class Payment implements Serializable {
-	ArrayList<pricetype> pricelist = new ArrayList<pricetype>();
-	pricetype regular = new pricetype();
-	pricetype gold = new pricetype();
+	ArrayList<Pricetype> pricelist = new ArrayList<Pricetype>();
+	Pricetype regular = new Pricetype();
+	Pricetype gold = new Pricetype();
 	double price;
 	Scanner sc = new Scanner(System.in);
 	
