@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import serializeHandler.SerializeHandler;
+import ioHandler.SerializeHandler;
 
 public class admin {
 	Scanner sc = new Scanner(System.in);
@@ -46,7 +46,7 @@ public class admin {
 					addMovieEntry();
 					break;
 				case 2: 
-					updateMovieListing();
+					updateMovieEntry();
 					break;
 				case 3:
 					deleteMovieEntry();
@@ -72,14 +72,13 @@ public class admin {
 					break;
 			}
 			
-			//should it be here? not outside loop?
-			SerializeHandler.saveArray(array_Schedule,"scheduleDatabse.txt");
-			SerializeHandler.saveArray(array_movie,"movieDatabse.txt");
-			
 			System.out.println();
 			printMenu();
 		}while(option != 9);
-
+		
+		//save object after quitting app
+		SerializeHandler.saveArray(array_Schedule,"scheduleDatabse.txt");
+		SerializeHandler.saveArray(array_movie,"movieDatabse.txt");
 	}
 
 	
@@ -134,9 +133,9 @@ public class admin {
 
 	public void deleteId() {
 		System.out.println("Choose the admin id you want to delete");
-		for (int i = 0; i < array_login.size(); i++) {
+		for (int i = 0; i < array_login.size(); i++)
 			System.out.println((i + 1) + ". " + array_login.get(i).getId());
-		}
+		
 		int choice = sc.nextInt();
 		sc.nextLine();
 		array_login.remove(choice - 1);
@@ -156,6 +155,7 @@ public class admin {
 			NowShowing.add(mov);
 		else
 			EndOfShowing.add(mov);
+		
 		array_movie.add(ComingSoon);
 		array_movie.add(Preview);
 		array_movie.add(NowShowing);
@@ -196,7 +196,52 @@ public class admin {
 		EndOfShowing.add((Movie) (array_movie.get(cat - 1)).get(choice - 1));
 		array_movie.get(cat - 1).remove(choice - 1);
 		System.out.println("This movie has been removed.");
-		FileOutputStream fos = null;
+	}
+
+	private void showMovieEntry() {
+		System.out.println("\nList of Movies:\n");
+		System.out.println("1.Coming soon movie:");
+			for (int i = 0; i < ComingSoon.size(); i++)
+				System.out.println((i + 1) + ". " + ComingSoon.get(i).getTitle());
+		System.out.println("2.Preview Movie");
+			for (int i = 0; i < Preview.size(); i++)
+				System.out.println((i + 1) + ". " + Preview.get(i).getTitle());
+		System.out.println("3.Now Showing Movie");
+			for (int i = 0; i < NowShowing.size(); i++)
+				System.out.println((i + 1) + ". " + NowShowing.get(i).getTitle());
+	}
+	
+	public void updateMovieEntry() {
+		System.out.println("1. Change Showing Status");
+		System.out.println("Choose option: ");
+		int option = sc.nextInt();
+		switch (option) {
+		case 1:
+			showMovieEntry();
+			System.out.println("\nWhich category to change?");
+			int cat = sc.nextInt();
+			System.out.println("\nChoose the movie you want to update :");
+			int choice = sc.nextInt();
+			try{
+				Movie m = (Movie) array_movie.get(cat - 1).get(choice - 1);
+				System.out.println("\nChange status to: ");
+				System.out.println("1. Coming Soon");
+				System.out.println("2. Preview");
+				System.out.println("3. Now Showing");
+				System.out.println("4. End of Showing");
+				int status = sc.nextInt();
+				while(status>4 || status<0){
+					System.out.println("Invalid input!");
+					status=sc.nextInt();
+				}
+				m.setShowingStatus(status);
+			} catch (NullPointerException e){
+				System.out.println("Invalid category/movie!");
+			}
+			array_movie.get(cat - 1).remove(choice - 1);
+			array_movie.get(status - 1).add(m);
+		break;
+		}
 	}
 
 	public void createMovieShowTimes() {
@@ -226,13 +271,13 @@ public class admin {
 
 	public void removeMovieShowTime() {
 		System.out.println("Please select the date: ");
-		for (int i = 0; i < array_Schedule.size(); i++) {
+		for (int i = 0; i < array_Schedule.size(); i++)
 			System.out.println((i + 1) + ". " + array_Schedule.get(i).date);
-		}
+		
 		int date_sel = sc.nextInt();
 		sc.nextLine();
 		boolean deleteall = false;
-		System.out.println("\nDo you want to delete all the schedules for that date? (y/n)");
+		System.out.println("\nDo you want to delete all the timeslot for that date? (y/n)");
 		if (sc.nextLine().compareTo("y") == 0) {
 			deleteall = true;
 			array_Schedule.remove(date_sel - 1);
@@ -274,55 +319,5 @@ public class admin {
 			}
 		}
 
-	}
-
-	public void updateMovieListing() {
-		System.out.println("1. Change Showing Status");
-		System.out.println("Choose option: ");
-		int option = sc.nextInt();
-		switch (option) {
-		case 1: {
-			System.out.println("\nWhich category to change?");
-			System.out.println("1. Coming Soon");
-			System.out.println("2. Preview");
-			System.out.println("3. Now Showing");
-			int cat = sc.nextInt();
-			System.out.println();
-			switch (cat) {
-			case 1:
-				System.out.println("Coming soon movie:");
-				for (int i = 0; i < ComingSoon.size(); i++) {
-					System.out.println((i + 1) + ". " + ComingSoon.get(i).getTitle());
-				}
-				break;
-			case 2:
-				System.out.println("Preview Movie");
-				for (int i = 0; i < Preview.size(); i++) {
-					System.out.println((i + 1) + ". " + Preview.get(i).getTitle());
-				}
-				break;
-			case 3:
-				System.out.println("Now Showing Movie");
-				for (int i = 0; i < NowShowing.size(); i++) {
-					System.out.println((i + 1) + ". " + NowShowing.get(i).getTitle());
-				}
-				break;
-			}
-			System.out.println("Choose the movie you want to update :");
-			int choice = sc.nextInt();
-			sc.nextLine();
-			System.out.println("\nChange status to: ");
-			System.out.println("1. Coming Soon");
-			System.out.println("2. Preview");
-			System.out.println("3. Now Showing");
-			System.out.println("4. End of Showing");
-			int status = sc.nextInt();
-			Movie m = (Movie) array_movie.get(cat - 1).get(choice - 1);
-			m.setShowingStatus(status);
-			array_movie.get(cat - 1).remove(choice - 1);
-			array_movie.get(status - 1).add(m);
-
-		}
-		}
 	}
 }
