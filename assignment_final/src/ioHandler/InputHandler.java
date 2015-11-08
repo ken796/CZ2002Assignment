@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 
 public class InputHandler {
-	private static int getIntInput(int low, int high) {
+	public static int getIntInput(int low, int high) {
 		Scanner sc = new Scanner(System.in);
 		int input = sc.nextInt();
 		while(input<low || input>high) {

@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import ioHandler.SerializeHandler;
+import ioHandler.*;
 
 public class admin {
 	Scanner sc = new Scanner(System.in);
@@ -219,7 +219,7 @@ public class admin {
 		case 1:
 			showMovieEntry();
 			System.out.println("\nWhich category to change?");
-			int cat = sc.nextInt();
+			int cat = InputHandler.getIntInput(1, 3);
 			System.out.println("\nChoose the movie you want to update :");
 			int choice = sc.nextInt();
 			try{
