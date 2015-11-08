@@ -1,7 +1,9 @@
 package assignment_final;
 
 import java.util.*;
-import java.io.*;
+
+import serializeHandler.SerializeHandler;
+
 import java.text.SimpleDateFormat;
 
 public class user {
@@ -13,71 +15,47 @@ public class user {
 	ArrayList<Schedule> array_Schedule = new ArrayList<Schedule>();
 
 	public void userApp() {
-		try {
-			FileInputStream fis = new FileInputStream("scheduleDatabase.txt");
-			ObjectInputStream in = new ObjectInputStream(fis);
-			array_Schedule = (ArrayList) in.readObject();
-			in.close();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace();
-		}
+		array_Schedule = SerializeHandler.loadArray("scheduleDatabase.txt");
 		printMenu();
 		int option;
 		do{
-		option = sc.nextInt();
-		sc.nextLine();
-		System.out.println();
-		switch (option) {
-		case 1: {
-			try {
-				FileInputStream fis = new FileInputStream("movieDatabase.txt");
-				ObjectInputStream in = new ObjectInputStream(fis);
-				array_movie = (ArrayList) in.readObject();
+			option = sc.nextInt();
+			sc.nextLine();
+			System.out.println();
+			switch (option) {
+			case 1:
+				array_movie = SerializeHandler.loadArray("movieDatabase.txt");
 				NowShowing = array_movie.get(2);
 				ComingSoon = array_movie.get(0);
 				Preview = array_movie.get(1);
-				in.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			} catch (ClassNotFoundException ex) {
-				ex.printStackTrace();
+					
+				System.out.println("Now Showing: ");
+				for (int i = 0; i < NowShowing.size(); i++)
+					System.out.println((i + 1) + ". " + NowShowing.get(i).getTitle());
+				
+				System.out.println("Preview: ");
+				for (int i = 0; i < Preview.size(); i++)
+					System.out.println((i + 1) + ". " + Preview.get(i).getTitle());
+				
+				System.out.println("Coming Soon: ");
+				for (int i = 0; i < ComingSoon.size(); i++)
+					System.out.println((i + 1) + ". " + ComingSoon.get(i).getTitle());
+				System.out.println();
+				break;
+			case 2:
+				booking();
+				userApp();
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				return;
+			default:
+				System.out.println("Input Error! Try again!\n");
 			}
-			System.out.println("Now Showing: ");
-			for (int i = 0; i < NowShowing.size(); i++) {
-				System.out.println((i + 1) + ". " + NowShowing.get(i).getTitle());
-			}
-			System.out.println("Preview: ");
-			for (int i = 0; i < Preview.size(); i++) {
-				System.out.println((i + 1) + ". " + Preview.get(i).getTitle());
-			}
-			System.out.println("Coming Soon: ");
-			for (int i = 0; i < ComingSoon.size(); i++) {
-				System.out.println((i + 1) + ". " + ComingSoon.get(i).getTitle());
-			}
-			System.out.println();
-			break;
-		}
-		case 2: {
-			booking();
-			userApp();
-			break;
-		}
-		case 3: {
-
-			break;
-		}
-		case 4:
-			break;
-		case 5: {
-			return;
-		}
-		default :
-			System.out.println("Input Error! Try again!\n");
-
-		}
-		printMenu();
+			printMenu();
 		}while(option != 5);
 	}
 
@@ -117,22 +95,12 @@ public class user {
 		System.out.println();
 		if (tno == 1) {
 			array_Schedule.get(choice).theatre1.slot[time].occupySeat();
-
 		} else if (tno == 2) {
 			array_Schedule.get(choice).theatre2.slot[time].occupySeat();
 		} else {
 			array_Schedule.get(choice).theatre3.slot[time].occupySeat();
 		}
-		try {
-			FileOutputStream fos = new FileOutputStream("scheduleDatabase.txt");
-			ObjectOutputStream out = new ObjectOutputStream(fos);
-			out.writeObject(array_Schedule);
-			out.close();
-			System.out.println();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-
+		SerializeHandler.saveArray(array_Schedule, "scheduleDatabse.txt");
 	}
 
 	public void printMenu() {
