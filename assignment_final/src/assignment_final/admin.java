@@ -224,22 +224,19 @@ public class admin {
 			int choice = sc.nextInt();
 			try{
 				Movie m = (Movie) array_movie.get(cat - 1).get(choice - 1);
-				System.out.println("\nChange status to: ");
-				System.out.println("1. Coming Soon");
-				System.out.println("2. Preview");
-				System.out.println("3. Now Showing");
-				System.out.println("4. End of Showing");
-				int status = sc.nextInt();
-				while(status>4 || status<0){
-					System.out.println("Invalid input!");
-					status=sc.nextInt();
-				}
+				System.out.println(
+						"\nChange status to: \n" + 
+						"1. Coming Soon\n"	+ 
+						"2. Preview\n"			+
+						"3. Now Showing\n"	+
+						"4. End of Showing");
+				int status = InputHandler.getIntInput(1, 4);
 				m.setShowingStatus(status);
+				array_movie.get(cat - 1).remove(choice - 1);
+				array_movie.get(status - 1).add(m);
 			} catch (NullPointerException e){
-				System.out.println("Invalid category/movie!");
+				System.out.println("Invalid choice of movie!");
 			}
-			array_movie.get(cat - 1).remove(choice - 1);
-			array_movie.get(status - 1).add(m);
 		break;
 		}
 	}

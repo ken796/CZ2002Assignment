@@ -4,6 +4,11 @@ import java.util.Scanner;
 
 
 public class InputHandler {
+	
+	
+	/*
+	 * for getting input within particular range
+	 */
 	public static int getIntInput(int low, int high) {
 		Scanner sc = new Scanner(System.in);
 		int input = sc.nextInt();
@@ -14,4 +19,5 @@ public class InputHandler {
 		sc.close();
 		return input;
 	}
+	
 }
